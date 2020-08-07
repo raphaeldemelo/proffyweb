@@ -2,31 +2,48 @@ import React from 'react';
 
 import whatsappIcon from "../../assets/images/icons/whatsapp.svg";
 import './styles.css';
+import api from '../../services/api';
 
-function TeacherItem() {
+export interface Teacher {
+    avatar: string,
+    bio: string,
+    cost: number,
+    name: string,
+    subject: string,
+    whatsapp: string,
+    id: number;
+}
+
+interface TeacherItemProps {
+    teacher: Teacher;
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+
+    function createNewConnection(){
+        api.post('/connections',{
+            user_id: teacher.id,
+        })
+    }
+
     return (
         <article className="teacher-item">
             <header>
-                <img src="https://scontent-gru2-1.cdninstagram.com/v/t51.2885-19/s320x320/73393239_2657542617640248_3207442355011452928_n.jpg?_nc_ht=scontent-gru2-1.cdninstagram.com&_nc_ohc=CL4IHrgWyi4AX_Qz8L_&oh=091036bd8625b89dd2a821402acb4dd0&oe=5F50FD4A" alt="Raphael de Melo" />
+                <img src={teacher.avatar} alt={teacher.name} />
                 <div>
-                    <strong>Raphael de Melo</strong>
-                    <span>Informática</span>
+                    <strong>{teacher.name}</strong>
+                    <span>{teacher.subject}</span>
                 </div>
             </header>
-            <p>
-                Entusiasta das melhores tecnologias
-                <br /><br />
-                Apaixonado por explodir coisas em laboratório e por mudar a vida das pessoas através de experiências.
-                Mais de 200.000 pessoas já passaram por uma das minhas explosões.
-            </p>
+            <p>{teacher.bio}</p>
 
             <footer>
-                <p> Preço/hora <strong>R$ 80,00</strong> </p>
+                <p> Preço/hora <strong>R$ {teacher.cost}</strong> </p>
 
-                 <button type="button">
+                <a target="_blank" onClick={createNewConnection} href={`http://wa.me/+55${teacher.whatsapp}`}>
                     <img src={whatsappIcon} alt="whatsapp" />
                         Entrar em contato
-                </button>
+                </a>
             </footer>
         </article>
     )
